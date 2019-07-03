@@ -18,9 +18,7 @@ enum Platform
 };
 
 template <int>
-class Application
-{
-};
+class Application;
 
 template <>
 class Application<WINDOWS>

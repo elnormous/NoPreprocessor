@@ -1,2 +1,4 @@
 NoPreprocessor.xcodeproj/xcuserdata
 NoPreprocessor.xcodeproj/project.xcworkspace
+*.o
+noprep
