@@ -12,7 +12,7 @@ platform=2
 endif
 endif
 
-CXXFLAGS=-c -std=c++11 -Wall -O2 -I$(ROOT_DIR)/../include -DPLATFORM=$(platform)
+CXXFLAGS=-c -std=c++11 -Wall -O2 -DPLATFORM=$(platform)
 LDFLAGS=-O2
 SOURCES=$(ROOT_DIR)/main.cpp
 BASE_NAMES=$(basename $(SOURCES))
