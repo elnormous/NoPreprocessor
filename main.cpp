@@ -13,9 +13,9 @@ using HANDLE = PVOID;
 using DWORD = unsigned long;
 using LPDWORD = DWORD*;
 
-static constexpr DWORD STD_INPUT_HANDLE = (DWORD)-10;
-static constexpr DWORD STD_OUTPUT_HANDLE = (DWORD)-11;
-static constexpr DWORD STD_ERROR_HANDLE = (DWORD)-12;
+static constexpr DWORD STD_INPUT_HANDLE = static_cast<DWORD>(-10);
+static constexpr DWORD STD_OUTPUT_HANDLE = static_cast<DWORD>(-11);
+static constexpr DWORD STD_ERROR_HANDLE = static_cast<DWORD>(-12);
 
 extern "C"
 {
