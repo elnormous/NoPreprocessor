@@ -37,6 +37,15 @@ enum class Output
     STDERR
 };
 
+static size_t getStringLength(const char* str)
+{
+    size_t result = 0;
+    while (str[result] != 0)
+        ++result;
+    return result;
+}
+
+
 template <int>
 class Application;
 
@@ -51,8 +60,10 @@ public:
             throw "Invalid output";
     }
 
-    static void log(const char* s, size_t length, Output output)
+    static void log(const char* s, Output output)
     {
+        size_t length = getStringLength(s);
+
         while (length)
         {
             DWORD result;
@@ -66,7 +77,7 @@ public:
 
     void run()
     {
-        log("Windows\n", 8, Output::STDOUT);
+        log("Windows\n", Output::STDOUT);
     }
 };
 
@@ -81,8 +92,10 @@ public:
         throw "Invalid output";
     }
 
-    static void log(const char* s, size_t length, Output output)
+    static void log(const char* s, Output output)
     {
+        size_t length = getStringLength(s);
+
         while (length)
         {
             auto result = write(getOutput(output), s, length);
@@ -96,7 +109,7 @@ public:
 
     void run()
     {
-        log("macOS\n", 6, Output::STDOUT);
+        log("macOS\n", Output::STDOUT);
     }
 };
 
@@ -111,8 +124,10 @@ public:
             throw "Invalid output";
     }
 
-    static void log(const char* s, size_t length, Output output)
+    static void log(const char* s, Output output)
     {
+        size_t length = getStringLength(s);
+
         while (length)
         {
             auto result = write(getOutput(output), s, length);
@@ -126,7 +141,7 @@ public:
 
     void run()
     {
-        log("Linux\n", 6, Output::STDOUT);
+        log("Linux\n", Output::STDOUT);
     }
 };
 
@@ -137,9 +152,13 @@ int main()
         Application<PLATFORM> application;
         application.run();
     }
+    catch (const char* e)
+    {
+        Application<PLATFORM>::log(e, Output::STDERR);
+    }
     catch (...)
     {
-        Application<PLATFORM>::log("Error\n", 6, Output::STDERR);
+        Application<PLATFORM>::log("Error\n", Output::STDERR);
     }
 
     return 0;
