@@ -31,6 +31,12 @@ enum Platform
     LINUX
 };
 
+enum class Output
+{
+    STDOUT,
+    STDERR
+};
+
 template <int>
 class Application;
 
@@ -38,21 +44,29 @@ template <>
 class Application<WINDOWS>
 {
 public:
-    static void log(const char* s, size_t length)
+    static constexpr DWORD getOutput(Output output)
     {
-        DWORD result;
-        WriteConsoleA(GetStdHandle(STD_OUTPUT_HANDLE), reinterpret_cast<const VOID*>(s), length, &result, nullptr);
+        return (output == Output::STDOUT) ? STD_OUTPUT_HANDLE :
+            (output == Output::STDERR) ? STD_ERROR_HANDLE :
+            throw "Invalid output";
     }
 
-    static void error(const char* s, size_t length)
+    static void log(const char* s, size_t length, Output output)
     {
-        DWORD result;
-        WriteConsoleA(GetStdHandle(STD_ERROR_HANDLE), reinterpret_cast<const VOID*>(s), length, &result, nullptr);
+        while (length)
+        {
+            DWORD result;
+            if (!WriteConsoleA(GetStdHandle(getOutput(output)), reinterpret_cast<const VOID*>(s), length, &result, nullptr))
+                throw "Failed to write to console";
+
+            s += result;
+            length -= static_cast<size_t>(result);
+        }
     }
 
     void run()
     {
-        log("Windows\n", 8);
+        log("Windows\n", 8, Output::STDOUT);
     }
 };
 
@@ -60,19 +74,29 @@ template <>
 class Application<MACOS>
 {
 public:
-    static void log(const char* s, size_t length)
+    static constexpr int getOutput(Output output)
     {
-        write(STDOUT_FILENO, s, length);
+        return (output == Output::STDOUT) ? STDOUT_FILENO :
+            (output == Output::STDERR) ? STDERR_FILENO :
+        throw "Invalid output";
     }
 
-    static void error(const char* s, size_t length)
+    static void log(const char* s, size_t length, Output output)
     {
-        write(STDERR_FILENO, s, length);
+        while (length)
+        {
+            auto result = write(getOutput(output), s, length);
+            if (result == -1)
+                throw "Failed to write to console";
+
+            s += result;
+            length -= static_cast<size_t>(result);
+        }
     }
 
     void run()
     {
-        log("macOS\n", 6);
+        log("macOS\n", 6, Output::STDOUT);
     }
 };
 
@@ -80,23 +104,33 @@ template <>
 class Application<LINUX>
 {
 public:
-    static void log(const char* s, size_t length)
+    static constexpr int getOutput(Output output)
     {
-        write(STDOUT_FILENO, s, length);
+        return (output == Output::STDOUT) ? STDOUT_FILENO :
+            (output == Output::STDERR) ? STDERR_FILENO :
+            throw "Invalid output";
     }
 
-    static void error(const char* s, size_t length)
+    static void log(const char* s, size_t length, Output output)
     {
-        write(STDERR_FILENO, s, length);
+        while (length)
+        {
+            auto result = write(getOutput(output), s, length);
+            if (result == -1)
+                throw "Failed to write to console";
+            
+            s += result;
+            length -= static_cast<size_t>(result);
+        }
     }
 
     void run()
     {
-        log("Linux\n", 6);
+        log("Linux\n", 6, Output::STDOUT);
     }
 };
 
-int main(int argc, const char * argv[])
+int main()
 {
     try
     {
@@ -105,7 +139,7 @@ int main(int argc, const char * argv[])
     }
     catch (...)
     {
-        Application<PLATFORM>::error("Error\n", 6);
+        Application<PLATFORM>::log("Error\n", 6, Output::STDERR);
     }
 
     return 0;
