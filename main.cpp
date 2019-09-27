@@ -1,10 +1,6 @@
 using size_t = unsigned int;
 using ssize_t = int;
 
-static constexpr int STDIN_FILENO = 0;    // standard input file descriptor
-static constexpr int STDOUT_FILENO = 1;    // standard output file descriptor
-static constexpr int STDERR_FILENO = 2;    // standard error file descriptor
-
 using BOOL = int;
 using VOID = void;
 using PVOID = void*;
@@ -13,9 +9,16 @@ using HANDLE = PVOID;
 using DWORD = unsigned long;
 using LPDWORD = DWORD*;
 
-static constexpr DWORD STD_INPUT_HANDLE = static_cast<DWORD>(-10);
-static constexpr DWORD STD_OUTPUT_HANDLE = static_cast<DWORD>(-11);
-static constexpr DWORD STD_ERROR_HANDLE = static_cast<DWORD>(-12);
+namespace
+{
+    constexpr int STDIN_FILENO = 0;    // standard input file descriptor
+    constexpr int STDOUT_FILENO = 1;    // standard output file descriptor
+    constexpr int STDERR_FILENO = 2;    // standard error file descriptor
+
+    constexpr DWORD STD_INPUT_HANDLE = static_cast<DWORD>(-10);
+    constexpr DWORD STD_OUTPUT_HANDLE = static_cast<DWORD>(-11);
+    constexpr DWORD STD_ERROR_HANDLE = static_cast<DWORD>(-12);
+}
 
 extern "C"
 {
@@ -37,14 +40,16 @@ enum class Output
     STDERR
 };
 
-static size_t getStringLength(const char* str)
+namespace
 {
-    size_t result = 0;
-    while (str[result] != 0)
-        ++result;
-    return result;
+    size_t getStringLength(const char* str)
+    {
+        size_t result = 0;
+        while (str[result] != 0)
+            ++result;
+        return result;
+    }
 }
-
 
 template <int>
 class Application;
