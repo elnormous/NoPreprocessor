@@ -1,5 +1,5 @@
-using size_t = unsigned int;
-using ssize_t = int;
+using size_t = unsigned long;
+using ssize_t = long;
 
 using BOOL = int;
 using VOID = void;
