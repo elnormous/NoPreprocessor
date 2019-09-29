@@ -42,7 +42,7 @@ enum class Output
 
 namespace
 {
-    size_t getStringLength(const char* str)
+    size_t getStringLength(const char* str) noexcept
     {
         size_t result = 0;
         while (str[result] != 0)
