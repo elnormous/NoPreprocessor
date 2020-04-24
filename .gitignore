@@ -1,5 +1,7 @@
+NoPreprocessor.xcodeproj/project.xcworkspace/xcshareddata
+NoPreprocessor.xcodeproj/project.xcworkspace/xcuserdata
+NoPreprocessor.xcodeproj/xcshareddata
 NoPreprocessor.xcodeproj/xcuserdata
-NoPreprocessor.xcodeproj/project.xcworkspace
 *.o
 noprep
 Debug
