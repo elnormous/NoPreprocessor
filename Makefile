@@ -10,7 +10,7 @@ platform=2
 endif
 endif
 
-CXXFLAGS=-c -std=c++11 -Wall -O2 -DPLATFORM=$(platform)
+CXXFLAGS=-std=c++11 -Wall -O2 -DPLATFORM=$(platform)
 LDFLAGS=-O2
 SOURCES=main.cpp
 BASE_NAMES=$(basename $(SOURCES))
@@ -26,7 +26,7 @@ $(EXECUTABLE): $(OBJECTS)
 	$(CXX) $(OBJECTS) $(LDFLAGS) -o $@
 
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) $< -o $@
+	$(CXX) -c $(CXXFLAGS) $< -o $@
 
 .PHONY: clean
 clean:
